@@ -26,6 +26,10 @@ npm run dev
 - **Undo/Redo** (80 Schritte) mit Ctrl+Z / Ctrl+Y
 - **Copy/Paste/Delete** mit Ctrl+C/V/D und Delete-Taste
 - **Multi-Select** mit Ctrl+Klick, Ctrl+A für alle
+- **Zonen-Labels** als Billboard-Text über Zonen (immer zur Kamera)
+- **Text-Labels** als schwebende Billboard-Beschriftungen
+- **Auto-Save** in localStorage (F5-safe, 300ms Debounce)
+- **JSON Export/Import** über Toolbar-Buttons
 - Dunkles UI-Design mit Toolbar, Bibliothek-Panel und Inspector-Panel
 - Edit-Modus und Präsentationsmodus (Panels ausgeblendet)
 - Grid-Overlay auf dem Hallenboden

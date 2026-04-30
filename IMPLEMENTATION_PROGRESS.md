@@ -157,5 +157,39 @@
 ### Bekannte Einschränkungen / TODOs
 
 - [ ] Box-Selection (Phase 7)
-- [ ] Auto-Save (Phase 5)
-- [ ] Persistenz (Phase 5)
+- [x] ~~Auto-Save~~ → in Stand 5 implementiert
+- [x] ~~Persistenz~~ → in Stand 5 implementiert
+
+---
+
+## Stand 5: Phase 4 + 5 – Zonen-Labels, Text-System & Persistenz
+
+### Abgeschlossen
+
+- **Phase 4.1 – Zonen-Labels:** Billboard-Text wird automatisch über jeder Zone zentriert angezeigt (Name aus metadata.name). Farbe entspricht der Zonenfarbe. Immer zur Kamera ausgerichtet.
+- **Phase 4.2 – Text-Labels:** Neuer GeometryKind `text` mit Billboard-Rendering über @react-three/drei `<Text>`. Zwei Templates: "Text-Label" und "Nummern-Label" in der Kategorie "Schilder & Labels". Live-Update über Inspector Name-Feld.
+- **Phase 5.1 – Auto-Save:** Debounced Auto-Save (300ms) in localStorage. Layout wird beim App-Start automatisch wiederhergestellt. F5-safe.
+- **Phase 5.3 – JSON Export/Import:** Export-Button in der Toolbar speichert Layout als JSON-Datei (werkplan_layout_YYYY-MM-DD_HH-MM.json). Import-Button lädt JSON-Datei und stellt Layout wieder her mit History-Integration.
+
+### Geänderte Dateien
+
+- `src/components/scene/AssetRenderer.tsx` — Billboard-Labels für Zonen, TextAsset-Komponente für text-Geometrie
+- `src/templates/assetTemplates.ts` — 2 neue Templates: Text-Label, Nummern-Label (Kategorie "Schilder & Labels")
+- `src/templates/AssetFactory.ts` — `label` Typ für Schilder-Kategorie
+- `src/hooks/useAutoSave.ts` — Auto-Save Hook mit serializeLayout, loadLayout, exportLayout, importLayout
+- `src/components/ui/Toolbar.tsx` — Export/Import Buttons, Asset-Counter
+- `src/App.tsx` — useAutoSave Hook integriert
+- `src/styles/app.css` — Toolbar-Divider Style
+
+### Technische Entscheidungen
+
+- **Billboard-Labels statt statische Text-Meshes:** Zonen-Labels und Text-Assets nutzen `<Billboard>` + `<Text>` aus drei — immer zur Kamera ausgerichtet, immer lesbar
+- **Debounced Auto-Save (300ms):** Balanciert zwischen Datensicherheit und Performance. Kein JSON.stringify bei jedem Frame.
+- **Separate Export/Import Funktionen:** Exportierbar als Utility, nicht an React-Lifecycle gebunden
+
+### Bekannte Einschränkungen / TODOs
+
+- [ ] Decals (Phase 4.3) — bewusst zurückgestellt
+- [ ] Boden-Markierungen mit Canvas-Texturen (Phase 4.4) — bewusst zurückgestellt
+- [ ] Benannte Slots (Phase 5.2) — bewusst zurückgestellt
+- [ ] URL-Share (Phase 5.4) — bewusst zurückgestellt

@@ -523,4 +523,32 @@ export const ASSET_TEMPLATES: AssetTemplate[] = [
     defaultMetadata: { name: 'Feuerlöscher', description: 'Sicherheitsausrüstung' },
     tags: ['feuer', 'löscher', 'sicherheit'],
   },
+
+  // === Schilder & Labels ===
+  {
+    id: 'text-label',
+    label: 'Text-Label',
+    category: 'Schilder & Labels',
+    icon: '🏷️',
+    isUserAsset: false,
+    geometry: { kind: 'text', params: { fontSize: 1.2 } },
+    defaultColor: '#ffffff',
+    defaultScale: [1, 1, 1],
+    defaultVisual: { opacity: 1, roughness: 1, metalness: 0 },
+    defaultMetadata: { name: 'Neues Label', description: 'Schwebendes Billboard-Label' },
+    tags: ['text', 'label', 'schild', 'beschriftung'],
+  },
+  {
+    id: 'nummern-label',
+    label: 'Nummern-Label',
+    category: 'Schilder & Labels',
+    icon: '🔢',
+    isUserAsset: false,
+    geometry: { kind: 'text', params: { fontSize: 2.0 } },
+    defaultColor: '#fdd835',
+    defaultScale: [1, 1, 1],
+    defaultVisual: { opacity: 1, roughness: 1, metalness: 0 },
+    defaultMetadata: { name: '01', description: 'Nummern-Label' },
+    tags: ['nummer', 'zahl', 'label'],
+  },
 ];

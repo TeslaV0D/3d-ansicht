@@ -36,7 +36,7 @@ export class AssetFactory {
     const asset: Asset = {
       id: generateId(),
       templateId: template.id,
-      type: template.category === 'Zonen' ? 'zone' : template.category === 'Wege & Markierungen' ? 'way' : 'primitive',
+      type: template.category === 'Zonen' ? 'zone' : template.category === 'Wege & Markierungen' ? 'way' : template.category === 'Schilder & Labels' ? 'label' : 'primitive',
       category: template.category,
       position,
       rotation: [0, 0, 0],
