@@ -33,6 +33,10 @@ npm run dev
 - Dunkles UI-Design mit Toolbar, Bibliothek-Panel und Inspector-Panel
 - **Präsentationsmodus** mit Klick-Info-Panel (Name, Beschreibung, Metadaten)
 - **Demo-Layout** "Beispielwerk" mit ~50 Assets sofort ladbar
+- **Performance-HUD** (FPS, Assets, Heap) einblendbar mit H-Taste
+- **Keyboard-Shortcuts-Modal** per ?-Taste
+- **Alignment-Tools** bei Multi-Select (Ausrichten und Verteilen)
+- **PNG-Screenshot-Export** über Toolbar-Button
 - Modus-Wechsel per Toolbar oder Taste P / ESC
 - Grid-Overlay auf dem Hallenboden (nur im Edit-Modus)
 
@@ -59,6 +63,9 @@ npm run dev
 | Rotieren-Modus | R |
 | Skalieren-Modus | S |
 | Präsentationsmodus | P |
+| Performance-HUD | H |
+| Shortcuts anzeigen | ? |
+| Screenshot | Toolbar: 📷 |
 | Demo-Layout laden | Toolbar: 🏭 Demo |
 
 ## Tech Stack

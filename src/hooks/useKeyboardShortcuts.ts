@@ -1,7 +1,12 @@
 import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 
-export function useKeyboardShortcuts() {
+interface ShortcutCallbacks {
+  onToggleHUD: () => void;
+  onShowShortcuts: () => void;
+}
+
+export function useKeyboardShortcuts({ onToggleHUD, onShowShortcuts }: ShortcutCallbacks) {
   const setTool = useStore((s) => s.setTool);
   const setPlacingTemplateId = useStore((s) => s.setPlacingTemplateId);
   const setSelectedIds = useStore((s) => s.setSelectedIds);
@@ -36,11 +41,21 @@ export function useKeyboardShortcuts() {
       }
 
       // P: toggle presentation mode
-      if (e.key === 'p' || e.key === 'P') {
-        if (!ctrl) {
-          setMode(mode === 'edit' ? 'presentation' : 'edit');
-          return;
-        }
+      if ((e.key === 'p' || e.key === 'P') && !ctrl) {
+        setMode(mode === 'edit' ? 'presentation' : 'edit');
+        return;
+      }
+
+      // H: toggle performance HUD
+      if ((e.key === 'h' || e.key === 'H') && !ctrl) {
+        onToggleHUD();
+        return;
+      }
+
+      // ?: show shortcuts modal
+      if (e.key === '?') {
+        onShowShortcuts();
+        return;
       }
 
       // All shortcuts below are edit-mode only
@@ -112,5 +127,5 @@ export function useKeyboardShortcuts() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [setTool, setPlacingTemplateId, setSelectedIds, setMode, undo, redo, copySelected, paste, deleteSelected, duplicateSelected, assets, mode]);
+  }, [setTool, setPlacingTemplateId, setSelectedIds, setMode, undo, redo, copySelected, paste, deleteSelected, duplicateSelected, assets, mode, onToggleHUD, onShowShortcuts]);
 }

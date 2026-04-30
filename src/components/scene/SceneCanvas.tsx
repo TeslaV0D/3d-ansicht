@@ -53,6 +53,7 @@ export function SceneCanvas({ onPresentationClick }: SceneCanvasProps) {
   return (
     <Canvas
       shadows
+      gl={{ preserveDrawingBuffer: true }}
       camera={{
         position: [30, 25, 30],
         fov: 50,
