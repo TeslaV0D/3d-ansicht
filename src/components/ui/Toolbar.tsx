@@ -13,6 +13,8 @@ interface ToolbarProps {
 export function Toolbar({ showHUD, onToggleHUD, onShowShortcuts, onScreenshot }: ToolbarProps) {
   const mode = useStore((s) => s.mode);
   const setMode = useStore((s) => s.setMode);
+  const tool = useStore((s) => s.tool);
+  const setTool = useStore((s) => s.setTool);
   const assets = useStore((s) => s.assets);
   const setAssets = useStore((s) => s.setAssets);
   const pushHistory = useStore((s) => s.pushHistory);
@@ -22,6 +24,7 @@ export function Toolbar({ showHUD, onToggleHUD, onShowShortcuts, onScreenshot }:
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const multiSelected = selectedIds.length >= 2;
+  const hasSelection = selectedIds.length > 0;
 
   function handleExport() {
     const json = exportLayout();
@@ -104,6 +107,32 @@ export function Toolbar({ showHUD, onToggleHUD, onShowShortcuts, onScreenshot }:
               onChange={handleFileChange}
             />
             <span className="toolbar-divider" />
+            {hasSelection && (
+              <>
+                <button
+                  className={`toolbar-btn toolbar-btn-sm ${tool === 'move' ? 'active' : ''}`}
+                  onClick={() => setTool('move')}
+                  title="Bewegen (G)"
+                >
+                  ✥
+                </button>
+                <button
+                  className={`toolbar-btn toolbar-btn-sm ${tool === 'rotate' ? 'active' : ''}`}
+                  onClick={() => setTool('rotate')}
+                  title="Rotieren (R)"
+                >
+                  ↻
+                </button>
+                <button
+                  className={`toolbar-btn toolbar-btn-sm ${tool === 'scale' ? 'active' : ''}`}
+                  onClick={() => setTool('scale')}
+                  title="Skalieren (S)"
+                >
+                  ⇲
+                </button>
+                <span className="toolbar-divider" />
+              </>
+            )}
             {multiSelected && (
               <>
                 <button className="toolbar-btn toolbar-btn-sm" onClick={() => alignSelected('x', 'min')} title="Links ausrichten">

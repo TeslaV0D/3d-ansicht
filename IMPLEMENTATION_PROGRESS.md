@@ -271,3 +271,37 @@
 - [ ] Custom GLB/STL-Import (Phase 7.6) — bewusst zurückgestellt (erfordert IndexedDB für Data-URLs)
 - [ ] Box-Selection (7.x) — bewusst zurückgestellt
 - [ ] Instancing-Optimierung ab 50+ gleichen Assets — bewusst zurückgestellt (Demo-Layout hat < 50 gleiche Templates)
+
+---
+
+## Stand 8: Transform-Gizmo (Blender-Style)
+
+### Abgeschlossen
+
+- **TransformGizmo-Komponente:** Blender-ähnliche visuelle Transform-Gizmos mit @react-three/drei `TransformControls`. Farbcodierte Achsen (X=Rot, Y=Grün, Z=Blau). Drei Modi: Move (Pfeile), Rotate (Ringe), Scale (Würfel-Handles).
+- **Gizmo-Interaktion:** Drag auf Achsen verschiebt/dreht/skaliert das Asset in Echtzeit. Bidirektionale Bindung: Inspector-Felder aktualisieren Gizmo und umgekehrt. Undo-Integration (History-Push bei Drag-Start).
+- **Modus-Umschalten:** G=Move, R=Rotate, S=Scale Shortcuts (Blender-kompatibel). Toolbar-Buttons (✥ ↻ ⇲) erscheinen bei Selektion mit aktiver Hervorhebung.
+- **Gizmo-Utility-Library:** `src/lib/gizmo.ts` mit constrainToAxis, constrainToPlane, calculateGizmoSize, snapToGrid, clamp-Funktionen, Grad/Radiant-Konversion.
+- **Unit-Tests:** 28 Tests für alle Gizmo-Utilities (Achsen-Constraints, Größenberechnung, Grid-Snap, Clamping, Rotation-Normalisierung, Tool-Modus-Mapping).
+
+### Geänderte Dateien
+
+- `src/components/scene/TransformGizmo.tsx` — Neue Gizmo-Komponente mit drei TransformControls
+- `src/components/scene/SceneCanvas.tsx` — TransformGizmo Integration
+- `src/components/ui/Toolbar.tsx` — Gizmo-Modus-Buttons (✥ ↻ ⇲) bei Selektion
+- `src/lib/gizmo.ts` — Gizmo-Utility-Funktionen
+- `tests/gizmo.test.ts` — 28 Unit-Tests für Gizmo-Utilities
+
+### Technische Entscheidungen
+
+- **@react-three/drei TransformControls statt Custom-Gizmo:** Bewährte, performante Implementierung mit korrektem OrbitControls-Deaktivierungsverhalten (`makeDefault` + `dragging-changed` Event). Custom-Gizmo wäre 500+ Zeilen Code für gleiche Funktionalität.
+- **Gruppe als Child statt externer Object3D:** TransformControls mit `<group>` als Child vermeidet ESLint-Probleme mit Ref-Zugriff während Render und ist R3F-idomatisch.
+- **Key mit Asset-ID + Mode:** Re-Mount bei Asset-Wechsel oder Modus-Wechsel garantiert saubere Synchronisation ohne Race-Conditions.
+- **Live-Update bei Drag:** `objectChange` Event committed Position/Rotation/Scale in den Store bei jedem Frame während des Drags — Inspector aktualisiert sich sofort.
+
+### Bekannte Einschränkungen / TODOs
+
+- [ ] Multi-Select Gizmo (gemeinsames Gizmo für mehrere Assets)
+- [ ] Local-Space Toggle (World vs. Asset-relative Achsen)
+- [ ] Grid-Snap während Gizmo-Drag (Shift-Modifier)
+- [ ] Locked-Asset Gizmo-Visualisierung (grau/inaktiv)
