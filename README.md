@@ -18,8 +18,12 @@ npm run dev
 - Isometrische Kamera mit OrbitControls (Drehen, Zoomen, Schwenken)
 - 4 Kamera-Presets mit animierten Übergängen
 - HDRI-Beleuchtung (Warehouse) mit Schatten
+- **Asset-Bibliothek** mit 37 Templates in 8 Kategorien
+- **Click-to-Place** mit Ghost-Vorschau und Grid-Snap
+- Live-Suchfilter in der Bibliothek
+- Hover-Feedback und Selection-Highlight auf platzierten Assets
 - Dunkles UI-Design mit Toolbar, Bibliothek-Panel und Inspector-Panel
-- Edit-Modus und Präsentationsmodus
+- Edit-Modus und Präsentationsmodus (Panels ausgeblendet)
 - Grid-Overlay auf dem Hallenboden
 
 ## Bedienung
@@ -33,6 +37,7 @@ npm run dev
 | Kamera Top-Down | Taste 2 |
 | Kamera Front | Taste 3 |
 | Kamera Seite | Taste 4 |
+| Platzierung abbrechen | Escape |
 
 ## Tech Stack
 

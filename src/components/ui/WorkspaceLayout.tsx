@@ -1,25 +1,26 @@
 import { SceneCanvas } from '../scene/SceneCanvas';
+import { LibraryPanel } from './LibraryPanel';
+import { useStore } from '../../store/useStore';
 
 export function WorkspaceLayout() {
+  const mode = useStore((s) => s.mode);
+
   return (
     <div className="workspace-layout">
-      <aside className="panel-left">
-        <div className="panel-header">Bibliothek</div>
-        <div className="panel-content">
-          <p className="panel-placeholder">Asset-Bibliothek (Phase 2)</p>
-        </div>
-      </aside>
+      {mode === 'edit' && <LibraryPanel />}
 
       <main className="scene-container">
         <SceneCanvas />
       </main>
 
-      <aside className="panel-right">
-        <div className="panel-header">Inspector</div>
-        <div className="panel-content">
-          <p className="panel-placeholder">Properties (Phase 3)</p>
-        </div>
-      </aside>
+      {mode === 'edit' && (
+        <aside className="panel-right">
+          <div className="panel-header">Inspector</div>
+          <div className="panel-content">
+            <p className="panel-placeholder">Properties (Phase 3)</p>
+          </div>
+        </aside>
+      )}
     </div>
   );
 }

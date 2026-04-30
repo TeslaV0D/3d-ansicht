@@ -4,10 +4,27 @@ import { FactoryFloor } from './FactoryFloor';
 import { FactoryWalls } from './FactoryWalls';
 import { Lighting } from './Lighting';
 import { CameraRig } from './CameraRig';
+import { AssetRenderer } from './AssetRenderer';
+import { GhostRenderer } from './GhostRenderer';
 import { useStore } from '../../store/useStore';
 
 export function SceneCanvas() {
   const gridSettings = useStore((s) => s.gridSettings);
+  const assets = useStore((s) => s.assets);
+  const selectedIds = useStore((s) => s.selectedIds);
+  const setSelectedIds = useStore((s) => s.setSelectedIds);
+  const tool = useStore((s) => s.tool);
+
+  function handleAssetPointerDown(id: string) {
+    if (tool !== 'select') return;
+    setSelectedIds([id]);
+  }
+
+  function handleCanvasPointerMissed() {
+    if (tool === 'select') {
+      setSelectedIds([]);
+    }
+  }
 
   return (
     <Canvas
@@ -19,10 +36,22 @@ export function SceneCanvas() {
         far: 500,
       }}
       style={{ background: '#1a1a2e' }}
+      onPointerMissed={handleCanvasPointerMissed}
     >
       <Lighting />
       <FactoryFloor />
       <FactoryWalls />
+
+      {assets.map((asset) => (
+        <AssetRenderer
+          key={asset.id}
+          asset={asset}
+          isSelected={selectedIds.includes(asset.id)}
+          onPointerDown={handleAssetPointerDown}
+        />
+      ))}
+
+      <GhostRenderer />
 
       {gridSettings.visible && (
         <Grid

@@ -156,3 +156,119 @@ body,
   position: relative;
   overflow: hidden;
 }
+
+/* Library Panel */
+.library-search {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.library-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: 13px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.library-search-input:focus {
+  border-color: var(--color-accent);
+}
+
+.library-content {
+  padding: 0 !important;
+}
+
+.library-section {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.library-section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  font-family: var(--font);
+}
+
+.library-section-header:hover {
+  background: var(--color-bg-tertiary);
+}
+
+.library-section-arrow {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  width: 12px;
+}
+
+.library-section-icon {
+  font-size: 14px;
+}
+
+.library-section-title {
+  flex: 1;
+  text-align: left;
+}
+
+.library-section-count {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.library-section-items {
+  padding: 4px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.library-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-primary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  text-align: left;
+  font-family: var(--font);
+}
+
+.library-item:hover {
+  background: var(--color-accent);
+  color: white;
+}
+
+.library-item-icon {
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+}
+
+.library-item-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -78,6 +78,45 @@
 
 ### Bekannte Einschränkungen / TODOs
 
-- [ ] Bibliothek-Panel enthält nur Platzhalter (Phase 2)
+- [x] ~~Bibliothek-Panel enthält nur Platzhalter~~ → in Stand 3 implementiert
 - [ ] Inspector-Panel enthält nur Platzhalter (Phase 3)
-- [ ] Keine Asset-Platzierung möglich (Phase 2)
+- [x] ~~Keine Asset-Platzierung möglich~~ → in Stand 3 implementiert
+
+---
+
+## Stand 3: Phase 2 – Asset-System & Bibliothek
+
+### Abgeschlossen
+
+- **Phase 2.1 – Template-System:** 37 Asset-Templates in 8 Kategorien (Produktion, Logistik, Büro & Verwaltung, Personal, Zonen, Wege & Markierungen, Primitive, Infrastruktur). `AssetFactory` Klasse mit statischen Methoden für Template-Verwaltung, Instanzerstellung und Suche.
+- **Phase 2.2 – AssetRenderer:** Universeller 3D-Renderer für alle GeometryKind-Typen (box, cylinder, sphere, cone, torus, plane). Hover-Feedback mit Emissive-Glow, Selection-Highlight, automatische Y-Offset-Berechnung für Boden-Platzierung, Zonen/Wege flach auf dem Boden.
+- **Phase 2.3 – Bibliotheks-Panel:** Vollständige linke Sidebar mit anklappbaren Kategorien, Live-Suchfilter, Item-Count pro Kategorie. Klick auf Template aktiviert Platzier-Modus.
+- **Phase 2.4 – Click-to-Place & Ghost:** Halbtransparentes Ghost-Mesh folgt der Maus auf dem Boden mit Grid-Snap (1m Raster). Klick platziert Asset. ESC bricht ab. Platzier-Modus bleibt aktiv nach Platzierung für schnelle Mehrfach-Platzierung.
+
+### Geänderte Dateien
+
+- `src/templates/assetTemplates.ts` — 37 Asset-Templates mit allen Kategorien
+- `src/templates/AssetFactory.ts` — Factory-Klasse für Template-Verwaltung und Instanzerstellung
+- `src/components/scene/AssetRenderer.tsx` — Universeller 3D-Asset-Renderer mit Hover/Selection
+- `src/components/scene/GhostRenderer.tsx` — Ghost-Vorschau mit Grid-Snap und Platzierung
+- `src/components/scene/SceneCanvas.tsx` — Integration von AssetRenderer und GhostRenderer
+- `src/components/ui/LibraryPanel.tsx` — Vollständiges Bibliotheks-Panel mit Suche und Kategorien
+- `src/components/ui/WorkspaceLayout.tsx` — Integration des LibraryPanels, Panel-Ausblendung im Präsentationsmodus
+- `src/hooks/useKeyboardShortcuts.ts` — ESC zum Abbrechen des Platzier-Modus
+- `src/store/useStore.ts` — `placingTemplateId` State hinzugefügt
+- `src/styles/app.css` — Library-Panel Styles
+- `src/App.tsx` — Keyboard-Shortcuts Hook integriert
+
+### Technische Entscheidungen
+
+- **Unsichtbare Capture-Plane für Ghost:** Eine 200×200m unsichtbare Plane fängt alle Pointer-Events für die Ghost-Positionierung und Platzierung auf — vermeidet Konflikte mit dem sichtbaren Boden und Grid
+- **Grid-Snap per Default:** Position wird auf 1m-Raster gerundet, konfigurierbar über `gridSettings`
+- **Asset-ID-Generierung:** Kombination aus Timestamp, Counter und Random-String für Eindeutigkeit ohne UUID-Library
+- **Zonen automatisch flach:** Zonen und Wege werden automatisch mit -90° X-Rotation gerendert und knapp über dem Boden positioniert (Y=0.02/0.03)
+
+### Bekannte Einschränkungen / TODOs
+
+- [ ] Inspector-Panel enthält nur Platzhalter (Phase 3)
+- [ ] Kein Undo/Redo (Phase 3)
+- [ ] Keine Mehrfachauswahl (Phase 3)
+- [ ] Kein Transform-Gizmo (Phase 3)

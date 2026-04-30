@@ -9,6 +9,7 @@ interface AppState {
   selectedIds: string[];
   mode: AppMode;
   tool: Tool;
+  placingTemplateId: string | null;
   hallSettings: HallSettings;
   lightingSettings: LightingSettings;
   gridSettings: GridSettings;
@@ -20,6 +21,7 @@ interface AppState {
   setSelectedIds: (ids: string[]) => void;
   setMode: (mode: AppMode) => void;
   setTool: (tool: Tool) => void;
+  setPlacingTemplateId: (id: string | null) => void;
   setHallSettings: (settings: Partial<HallSettings>) => void;
   setLightingSettings: (settings: Partial<LightingSettings>) => void;
   setGridSettings: (settings: Partial<GridSettings>) => void;
@@ -30,6 +32,7 @@ export const useStore = create<AppState>((set) => ({
   selectedIds: [],
   mode: 'edit',
   tool: 'select',
+  placingTemplateId: null,
 
   hallSettings: {
     width: 50,
@@ -65,6 +68,7 @@ export const useStore = create<AppState>((set) => ({
   setSelectedIds: (ids) => set({ selectedIds: ids }),
   setMode: (mode) => set({ mode }),
   setTool: (tool) => set({ tool }),
+  setPlacingTemplateId: (id) => set({ placingTemplateId: id }),
   setHallSettings: (settings) =>
     set((state) => ({ hallSettings: { ...state.hallSettings, ...settings } })),
   setLightingSettings: (settings) =>
