@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { useStore } from '../../store/useStore';
 import { toolToGizmoMode, clampPosition, clampScale, radToDeg } from '../../lib/gizmo';
 import type { Asset } from '../../types';
+import type { GizmoMode } from '../../lib/gizmo';
 
 function getAssetWorldPosition(asset: Asset): [number, number, number] {
   const isZoneOrWay = asset.type === 'zone' || asset.type === 'way';
@@ -13,16 +14,18 @@ function getAssetWorldPosition(asset: Asset): [number, number, number] {
   return [asset.position[0], asset.position[1] + yOffset, asset.position[2]];
 }
 
-function GizmoControls({ asset, gizmoMode }: { asset: Asset; gizmoMode: 'translate' | 'rotate' | 'scale' }) {
+function GizmoControls({ asset, gizmoMode }: { asset: Asset; gizmoMode: GizmoMode }) {
   const transformRef = useRef<TransformControlsImpl>(null);
   const groupRef = useRef<THREE.Group>(null);
   const isDragging = useRef(false);
-  const { invalidate } = useThree();
+  const hasHistory = useRef(false);
+  const { gl } = useThree();
 
   const updateAsset = useStore((s) => s.updateAsset);
   const pushHistory = useStore((s) => s.pushHistory);
 
   const syncGroupToAsset = useCallback(() => {
+    if (isDragging.current) return;
     const group = groupRef.current;
     if (!group) return;
     const pos = getAssetWorldPosition(asset);
@@ -68,7 +71,7 @@ function GizmoControls({ asset, gizmoMode }: { asset: Asset; gizmoMode: 'transla
       rotation: newRotation,
       scale: newScale,
     });
-  }, [asset, updateAsset]);
+  }, [asset.id, asset.type, asset.geometry.params.height, updateAsset]);
 
   useEffect(() => {
     const controls = transformRef.current;
@@ -76,18 +79,15 @@ function GizmoControls({ asset, gizmoMode }: { asset: Asset; gizmoMode: 'transla
 
     function handleDraggingChanged(event: { value: boolean }) {
       isDragging.current = event.value;
-      if (event.value) {
-        pushHistory();
-      }
-      if (!event.value) {
-        commitTransform();
-      }
-    }
 
-    function handleObjectChange() {
-      if (isDragging.current) {
+      if (event.value) {
+        hasHistory.current = false;
+        pushHistory();
+        hasHistory.current = true;
+        gl.domElement.style.cursor = 'grabbing';
+      } else {
         commitTransform();
-        invalidate();
+        gl.domElement.style.cursor = '';
       }
     }
 
@@ -96,13 +96,11 @@ function GizmoControls({ asset, gizmoMode }: { asset: Asset; gizmoMode: 'transla
       removeEventListener: (type: string, listener: (...args: never[]) => void) => void;
     };
     ctrl.addEventListener('dragging-changed', handleDraggingChanged as never);
-    ctrl.addEventListener('objectChange', handleObjectChange as never);
 
     return () => {
       ctrl.removeEventListener('dragging-changed', handleDraggingChanged as never);
-      ctrl.removeEventListener('objectChange', handleObjectChange as never);
     };
-  }, [pushHistory, commitTransform, invalidate]);
+  }, [pushHistory, commitTransform, gl.domElement]);
 
   return (
     <TransformControls
@@ -120,12 +118,13 @@ export function TransformGizmo() {
   const assets = useStore((s) => s.assets);
   const selectedIds = useStore((s) => s.selectedIds);
 
-  const gizmoMode = toolToGizmoMode(tool);
   const selectedAsset = selectedIds.length === 1
     ? assets.find((a) => a.id === selectedIds[0])
     : null;
 
-  if (!gizmoMode || !selectedAsset || selectedAsset.locked) return null;
+  if (!selectedAsset || selectedAsset.locked) return null;
 
-  return <GizmoControls key={selectedAsset.id + gizmoMode} asset={selectedAsset} gizmoMode={gizmoMode} />;
+  const gizmoMode = toolToGizmoMode(tool) ?? 'translate';
+
+  return <GizmoControls key={selectedAsset.id} asset={selectedAsset} gizmoMode={gizmoMode} />;
 }

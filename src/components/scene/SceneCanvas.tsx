@@ -22,6 +22,8 @@ export function SceneCanvas({ onPresentationClick }: SceneCanvasProps) {
   const tool = useStore((s) => s.tool);
   const mode = useStore((s) => s.mode);
 
+  const setTool = useStore((s) => s.setTool);
+
   function handleAssetPointerDown(id: string, e: ThreeEvent<PointerEvent>) {
     if (mode === 'presentation') {
       e.stopPropagation();
@@ -42,12 +44,16 @@ export function SceneCanvas({ onPresentationClick }: SceneCanvasProps) {
       }
     } else {
       setSelectedIds([id]);
+      if (tool === 'select') {
+        setTool('move');
+      }
     }
   }
 
   function handleCanvasPointerMissed() {
-    if (mode === 'edit' && tool === 'select') {
+    if (mode === 'edit' && tool !== 'place') {
       setSelectedIds([]);
+      setTool('select');
     }
   }
 
