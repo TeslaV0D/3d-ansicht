@@ -5,6 +5,7 @@ export function useKeyboardShortcuts() {
   const setTool = useStore((s) => s.setTool);
   const setPlacingTemplateId = useStore((s) => s.setPlacingTemplateId);
   const setSelectedIds = useStore((s) => s.setSelectedIds);
+  const setMode = useStore((s) => s.setMode);
   const undo = useStore((s) => s.undo);
   const redo = useStore((s) => s.redo);
   const copySelected = useStore((s) => s.copySelected);
@@ -12,6 +13,7 @@ export function useKeyboardShortcuts() {
   const deleteSelected = useStore((s) => s.deleteSelected);
   const duplicateSelected = useStore((s) => s.duplicateSelected);
   const assets = useStore((s) => s.assets);
+  const mode = useStore((s) => s.mode);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -19,12 +21,30 @@ export function useKeyboardShortcuts() {
 
       const ctrl = e.ctrlKey || e.metaKey;
 
+      // ESC in presentation mode: return to edit
+      if (e.key === 'Escape' && mode === 'presentation') {
+        setMode('edit');
+        return;
+      }
+
+      // ESC in edit mode: cancel placement/selection
       if (e.key === 'Escape') {
         setTool('select');
         setPlacingTemplateId(null);
         setSelectedIds([]);
         return;
       }
+
+      // P: toggle presentation mode
+      if (e.key === 'p' || e.key === 'P') {
+        if (!ctrl) {
+          setMode(mode === 'edit' ? 'presentation' : 'edit');
+          return;
+        }
+      }
+
+      // All shortcuts below are edit-mode only
+      if (mode === 'presentation') return;
 
       // Undo: Ctrl+Z
       if (ctrl && e.key === 'z' && !e.shiftKey) {
@@ -92,5 +112,5 @@ export function useKeyboardShortcuts() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [setTool, setPlacingTemplateId, setSelectedIds, undo, redo, copySelected, paste, deleteSelected, duplicateSelected, assets]);
+  }, [setTool, setPlacingTemplateId, setSelectedIds, setMode, undo, redo, copySelected, paste, deleteSelected, duplicateSelected, assets, mode]);
 }

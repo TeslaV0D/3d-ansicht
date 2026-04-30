@@ -9,14 +9,28 @@ import { AssetRenderer } from './AssetRenderer';
 import { GhostRenderer } from './GhostRenderer';
 import { useStore } from '../../store/useStore';
 
-export function SceneCanvas() {
+interface SceneCanvasProps {
+  onPresentationClick?: (assetId: string) => void;
+}
+
+export function SceneCanvas({ onPresentationClick }: SceneCanvasProps) {
   const gridSettings = useStore((s) => s.gridSettings);
   const assets = useStore((s) => s.assets);
   const selectedIds = useStore((s) => s.selectedIds);
   const setSelectedIds = useStore((s) => s.setSelectedIds);
   const tool = useStore((s) => s.tool);
+  const mode = useStore((s) => s.mode);
 
   function handleAssetPointerDown(id: string, e: ThreeEvent<PointerEvent>) {
+    if (mode === 'presentation') {
+      e.stopPropagation();
+      const asset = assets.find((a) => a.id === id);
+      if (asset && !asset.locked) {
+        onPresentationClick?.(id);
+      }
+      return;
+    }
+
     if (tool === 'place') return;
     const ctrl = e.nativeEvent.ctrlKey || e.nativeEvent.metaKey;
     if (ctrl) {
@@ -31,7 +45,7 @@ export function SceneCanvas() {
   }
 
   function handleCanvasPointerMissed() {
-    if (tool === 'select') {
+    if (mode === 'edit' && tool === 'select') {
       setSelectedIds([]);
     }
   }
@@ -56,14 +70,14 @@ export function SceneCanvas() {
         <AssetRenderer
           key={asset.id}
           asset={asset}
-          isSelected={selectedIds.includes(asset.id)}
+          isSelected={mode === 'edit' && selectedIds.includes(asset.id)}
           onPointerDown={handleAssetPointerDown}
         />
       ))}
 
-      <GhostRenderer />
+      {mode === 'edit' && <GhostRenderer />}
 
-      {gridSettings.visible && (
+      {gridSettings.visible && mode === 'edit' && (
         <Grid
           args={[100, 100]}
           cellSize={1}

@@ -203,3 +203,36 @@
 **Fix:** `setDraft` verwendet nun den `parsed`-Wert (den tatsächlich commiteten Wert) statt des alten Props. Bei ungültigem Input wird auf den alten `value` zurückgesetzt.
 
 **Betroffene Datei:** `src/components/ui/InspectorPanel.tsx`
+
+---
+
+## Stand 6: Phase 6 – Präsentationsmodus
+
+### Abgeschlossen
+
+- **Phase 6.1 – Modus-Trennung (Edit vs. Präsentation):** Saubere Trennung zwischen Edit-Modus (volle Bearbeitung mit Bibliothek, Inspector, Toolbar) und Präsentationsmodus (minimale UI, nur Kamera-Navigation und Klick-Infos). Wechsel über Toolbar-Button "▶ Präsentation" oder Taste `P`. Zurück mit ESC oder "✎ Bearbeiten"-Button. Im Präsentationsmodus: keine Bibliothek, kein Inspector, kein Grid-Overlay, kein Ghost-Renderer. Toolbar zeigt minimalen Hint-Text. Gesperrte Objekte sind im Präsentationsmodus nicht klickbar.
+- **Phase 6.2 – Klick-Info-Panel (Präsentationsmodus):** Klick auf nicht-gesperrte Assets zeigt zentriertes Info-Modal mit: Name, Zonentyp-Badge, Beschreibung, benutzerdefinierte Metadaten-Felder als Tabelle, Präsentationsnotizen (stilisiert, kursiv). Keine technischen Daten (Position, Rotation, Material). Schließen per X-Button, Klick außerhalb, oder ESC. Smooth Animations (fadeIn + slideUp).
+- **Phase 6.3 – Demo-Layout "Beispielwerk":** Fertig aufgebautes Demo-Layout mit: 5 Zonen (FA1-Montage, FA2-Fertigung, Logistik, Büro, Eingang), Produktionslinien und Montagearbeitsplätze, CNC-Maschinen und Schweißroboter, Logistikbereich mit Regalen/Gabelstapler/Containern, Bürobereich mit Tischen und Whiteboard, Personal (stehend/sitzend), Infrastruktur (Säulen, Feuerlöscher), Wege und Markierungen, Text-Labels für alle Bereiche. Ladbar über "🏭 Demo" Button in der Toolbar.
+
+### Geänderte Dateien
+
+- `src/components/ui/Toolbar.tsx` — Komplett überarbeitet: Demo-Button, Präsentations-Toggle, Hint-Text im Präsentationsmodus
+- `src/components/ui/WorkspaceLayout.tsx` — PresentationInfoPanel Integration, Presentation-Click-State
+- `src/components/ui/PresentationInfoPanel.tsx` — Neues Info-Modal für Präsentationsmodus
+- `src/components/scene/SceneCanvas.tsx` — Presentation-Mode Click-Handling, Grid/Ghost nur im Edit-Modus
+- `src/hooks/useKeyboardShortcuts.ts` — P-Taste für Modus-Wechsel, ESC-Verhalten im Präsentationsmodus
+- `src/templates/demoLayout.ts` — Demo-Layout-Generator mit ~50 Assets
+- `src/styles/app.css` — Komplette Presentation-Mode Styles (Overlay, Info-Panel, Animations)
+
+### Technische Entscheidungen
+
+- **PresentationInfoPanel als eigenständige Komponente:** Saubere Trennung von Edit- und Präsentations-UI. Kein Wiederverwenden des InspectorPanels — unterschiedliche Anforderungen (kein Transform, kein Material, nur Metadaten).
+- **onPresentationClick Callback statt Store-State:** Presentation-Asset-ID als lokaler React-State in WorkspaceLayout statt globaler Store-State — verhindert unnötige Re-Renders der gesamten Szene.
+- **Demo-Layout als Funktion:** `generateDemoLayout()` erzeugt bei jedem Aufruf frische Asset-IDs — keine ID-Konflikte bei mehrfachem Laden.
+- **Grid und Ghost im Präsentationsmodus ausgeblendet:** Saubere Präsentationsansicht ohne Edit-Artefakte.
+
+### Bekannte Einschränkungen / TODOs
+
+- [ ] PNG-Screenshot-Export im Präsentationsmodus (Phase 7)
+- [ ] Performance-HUD (Phase 7)
+- [ ] Alignment-Tools (Phase 7)

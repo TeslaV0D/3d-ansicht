@@ -442,3 +442,178 @@ body,
   background: var(--color-danger);
   border-color: var(--color-danger);
 }
+
+/* Presentation Mode */
+.toolbar-presentation {
+  background: rgba(15, 15, 17, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.presentation-hint {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.presentation-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.presentation-info-panel {
+  position: relative;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  min-width: 320px;
+  max-width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.2s ease;
+}
+
+.presentation-info-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.presentation-info-close:hover {
+  background: var(--color-danger);
+  color: white;
+}
+
+.presentation-info-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.presentation-info-color {
+  width: 12px;
+  height: 48px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.presentation-info-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.presentation-info-zone {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.presentation-info-section {
+  margin-bottom: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+
+.presentation-info-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.presentation-info-description {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.presentation-info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.presentation-info-table td {
+  padding: 5px 0;
+  font-size: 13px;
+  vertical-align: top;
+}
+
+.presentation-info-table-key {
+  color: var(--color-text-secondary);
+  padding-right: 16px;
+  white-space: nowrap;
+}
+
+.presentation-info-table-value {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.presentation-info-notes {
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-top: 14px;
+  border-top: none;
+}
+
+.presentation-info-notes-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}

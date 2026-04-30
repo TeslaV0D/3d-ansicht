@@ -1,11 +1,14 @@
 import { useRef } from 'react';
 import { useStore } from '../../store/useStore';
 import { exportLayout, importLayout } from '../../hooks/useAutoSave';
+import { generateDemoLayout } from '../../templates/demoLayout';
 
 export function Toolbar() {
   const mode = useStore((s) => s.mode);
   const setMode = useStore((s) => s.setMode);
   const assets = useStore((s) => s.assets);
+  const setAssets = useStore((s) => s.setAssets);
+  const pushHistory = useStore((s) => s.pushHistory);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleExport() {
@@ -39,39 +42,62 @@ export function Toolbar() {
     e.target.value = '';
   }
 
+  function handleLoadDemo() {
+    pushHistory();
+    const demoAssets = generateDemoLayout();
+    setAssets(demoAssets);
+  }
+
+  function handlePresentationToggle() {
+    if (mode === 'edit') {
+      setMode('presentation');
+    } else {
+      setMode('edit');
+    }
+  }
+
   return (
-    <div className="toolbar">
+    <div className={`toolbar ${mode === 'presentation' ? 'toolbar-presentation' : ''}`}>
       <div className="toolbar-left">
         <span className="toolbar-logo">WERKPLAN</span>
-        <span className="toolbar-subtitle">3D Fabrik-Visualisierung</span>
+        {mode === 'edit' && (
+          <span className="toolbar-subtitle">3D Fabrik-Visualisierung</span>
+        )}
+        {mode === 'presentation' && (
+          <span className="toolbar-subtitle presentation-hint">
+            Präsentationsmodus — Klicke auf Assets für Details • ESC = Bearbeiten
+          </span>
+        )}
       </div>
       <div className="toolbar-center">
-        <button
-          className={`toolbar-btn ${mode === 'edit' ? 'active' : ''}`}
-          onClick={() => setMode('edit')}
-        >
-          Bearbeiten
-        </button>
+        {mode === 'edit' && (
+          <>
+            <button className="toolbar-btn" onClick={handleExport} title="Layout als JSON exportieren">
+              💾 Export
+            </button>
+            <button className="toolbar-btn" onClick={handleImport} title="Layout aus JSON importieren">
+              📂 Import
+            </button>
+            <button className="toolbar-btn" onClick={handleLoadDemo} title="Demo-Layout laden">
+              🏭 Demo
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <span className="toolbar-divider" />
+          </>
+        )}
         <button
           className={`toolbar-btn ${mode === 'presentation' ? 'active' : ''}`}
-          onClick={() => setMode('presentation')}
+          onClick={handlePresentationToggle}
+          title={mode === 'edit' ? 'Präsentationsmodus starten (P)' : 'Zurück zum Bearbeiten (ESC)'}
         >
-          Präsentation
+          {mode === 'edit' ? '▶ Präsentation' : '✎ Bearbeiten'}
         </button>
-        <span className="toolbar-divider" />
-        <button className="toolbar-btn" onClick={handleExport} title="Layout als JSON exportieren">
-          💾 Export
-        </button>
-        <button className="toolbar-btn" onClick={handleImport} title="Layout aus JSON importieren">
-          📂 Import
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-        />
       </div>
       <div className="toolbar-right">
         <span className="toolbar-status">{assets.length} Assets</span>
