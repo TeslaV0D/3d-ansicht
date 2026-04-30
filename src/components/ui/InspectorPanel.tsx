@@ -27,8 +27,10 @@ function NumberInput({
     const parsed = parseNum(draft);
     if (parsed !== null) {
       onChange(parsed);
+      setDraft(String(Math.round(parsed * 100) / 100));
+    } else {
+      setDraft(String(Math.round(value * 100) / 100));
     }
-    setDraft(String(Math.round(value * 100) / 100));
   }
 
   return (

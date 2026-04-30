@@ -193,3 +193,13 @@
 - [ ] Boden-Markierungen mit Canvas-Texturen (Phase 4.4) — bewusst zurückgestellt
 - [ ] Benannte Slots (Phase 5.2) — bewusst zurückgestellt
 - [ ] URL-Share (Phase 5.4) — bewusst zurückgestellt
+
+---
+
+### Bugfix: NumberInput commit bei Enter-Taste
+
+**Ursache:** In `NumberInput.commit()` wurde nach `onChange(parsed)` der Draft-Wert auf `String(Math.round(value * 100) / 100)` zurückgesetzt — wobei `value` noch den alten Prop-Wert enthielt. Da bei Enter `focused=true` bleibt, zeigte `displayValue` den alten Draft statt des neuen Wertes. Die Änderung wurde zwar an den Store gesendet, aber visuell im Eingabefeld nicht reflektiert.
+
+**Fix:** `setDraft` verwendet nun den `parsed`-Wert (den tatsächlich commiteten Wert) statt des alten Props. Bei ungültigem Input wird auf den alten `value` zurückgesetzt.
+
+**Betroffene Datei:** `src/components/ui/InspectorPanel.tsx`
