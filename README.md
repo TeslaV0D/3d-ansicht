@@ -35,6 +35,7 @@ npm run dev
 - **Demo-Layout** "Beispielwerk" mit ~50 Assets sofort ladbar
 - **Performance-HUD** (FPS, Assets, Heap) einblendbar mit H-Taste
 - **Keyboard-Shortcuts-Modal** per ?-Taste
+- **Transform-Gizmo** (Blender-Style) mit Move/Rotate/Scale per Drag
 - **Alignment-Tools** bei Multi-Select (Ausrichten und Verteilen)
 - **PNG-Screenshot-Export** über Toolbar-Button
 - Modus-Wechsel per Toolbar oder Taste P / ESC

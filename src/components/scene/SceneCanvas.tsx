@@ -7,6 +7,7 @@ import { Lighting } from './Lighting';
 import { CameraRig } from './CameraRig';
 import { AssetRenderer } from './AssetRenderer';
 import { GhostRenderer } from './GhostRenderer';
+import { TransformGizmo } from './TransformGizmo';
 import { useStore } from '../../store/useStore';
 
 interface SceneCanvasProps {
@@ -77,6 +78,7 @@ export function SceneCanvas({ onPresentationClick }: SceneCanvasProps) {
       ))}
 
       {mode === 'edit' && <GhostRenderer />}
+      {mode === 'edit' && <TransformGizmo />}
 
       {gridSettings.visible && mode === 'edit' && (
         <Grid
