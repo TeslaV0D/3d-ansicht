@@ -1,12 +1,27 @@
 import { useRef } from 'react';
 import { useStore } from '../../store/useStore';
 import { exportLayout, importLayout } from '../../hooks/useAutoSave';
+import { generateDemoLayout } from '../../templates/demoLayout';
 
-export function Toolbar() {
+interface ToolbarProps {
+  showHUD: boolean;
+  onToggleHUD: () => void;
+  onShowShortcuts: () => void;
+  onScreenshot: () => void;
+}
+
+export function Toolbar({ showHUD, onToggleHUD, onShowShortcuts, onScreenshot }: ToolbarProps) {
   const mode = useStore((s) => s.mode);
   const setMode = useStore((s) => s.setMode);
   const assets = useStore((s) => s.assets);
+  const setAssets = useStore((s) => s.setAssets);
+  const pushHistory = useStore((s) => s.pushHistory);
+  const selectedIds = useStore((s) => s.selectedIds);
+  const alignSelected = useStore((s) => s.alignSelected);
+  const distributeSelected = useStore((s) => s.distributeSelected);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const multiSelected = selectedIds.length >= 2;
 
   function handleExport() {
     const json = exportLayout();
@@ -39,41 +54,118 @@ export function Toolbar() {
     e.target.value = '';
   }
 
+  function handleLoadDemo() {
+    pushHistory();
+    const demoAssets = generateDemoLayout();
+    setAssets(demoAssets);
+  }
+
+  function handlePresentationToggle() {
+    if (mode === 'edit') {
+      setMode('presentation');
+    } else {
+      setMode('edit');
+    }
+  }
+
   return (
-    <div className="toolbar">
+    <div className={`toolbar ${mode === 'presentation' ? 'toolbar-presentation' : ''}`}>
       <div className="toolbar-left">
         <span className="toolbar-logo">WERKPLAN</span>
-        <span className="toolbar-subtitle">3D Fabrik-Visualisierung</span>
+        {mode === 'edit' && (
+          <span className="toolbar-subtitle">3D Fabrik-Visualisierung</span>
+        )}
+        {mode === 'presentation' && (
+          <span className="toolbar-subtitle presentation-hint">
+            Präsentationsmodus — Klicke auf Assets für Details • ESC = Bearbeiten
+          </span>
+        )}
       </div>
       <div className="toolbar-center">
-        <button
-          className={`toolbar-btn ${mode === 'edit' ? 'active' : ''}`}
-          onClick={() => setMode('edit')}
-        >
-          Bearbeiten
-        </button>
+        {mode === 'edit' && (
+          <>
+            <button className="toolbar-btn" onClick={handleExport} title="Layout als JSON exportieren">
+              💾 Export
+            </button>
+            <button className="toolbar-btn" onClick={handleImport} title="Layout aus JSON importieren">
+              📂 Import
+            </button>
+            <button className="toolbar-btn" onClick={handleLoadDemo} title="Demo-Layout laden">
+              🏭 Demo
+            </button>
+            <button className="toolbar-btn" onClick={onScreenshot} title="Screenshot als PNG exportieren">
+              📷 Screenshot
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <span className="toolbar-divider" />
+            {multiSelected && (
+              <>
+                <button className="toolbar-btn toolbar-btn-sm" onClick={() => alignSelected('x', 'min')} title="Links ausrichten">
+                  ⫷
+                </button>
+                <button className="toolbar-btn toolbar-btn-sm" onClick={() => alignSelected('x', 'center')} title="Mitte X">
+                  ⫿
+                </button>
+                <button className="toolbar-btn toolbar-btn-sm" onClick={() => alignSelected('x', 'max')} title="Rechts ausrichten">
+                  ⫸
+                </button>
+                <button className="toolbar-btn toolbar-btn-sm" onClick={() => alignSelected('z', 'min')} title="Oben ausrichten">
+                  ⊤
+                </button>
+                <button className="toolbar-btn toolbar-btn-sm" onClick={() => alignSelected('z', 'center')} title="Mitte Z">
+                  ⊡
+                </button>
+                <button className="toolbar-btn toolbar-btn-sm" onClick={() => alignSelected('z', 'max')} title="Unten ausrichten">
+                  ⊥
+                </button>
+                {selectedIds.length >= 3 && (
+                  <>
+                    <button className="toolbar-btn toolbar-btn-sm" onClick={() => distributeSelected('x')} title="Horizontal verteilen">
+                      ⋯
+                    </button>
+                    <button className="toolbar-btn toolbar-btn-sm" onClick={() => distributeSelected('z')} title="Vertikal verteilen">
+                      ⋮
+                    </button>
+                  </>
+                )}
+                <span className="toolbar-divider" />
+              </>
+            )}
+          </>
+        )}
         <button
           className={`toolbar-btn ${mode === 'presentation' ? 'active' : ''}`}
-          onClick={() => setMode('presentation')}
+          onClick={handlePresentationToggle}
+          title={mode === 'edit' ? 'Präsentationsmodus starten (P)' : 'Zurück zum Bearbeiten (ESC)'}
         >
-          Präsentation
+          {mode === 'edit' ? '▶ Präsentation' : '✎ Bearbeiten'}
         </button>
-        <span className="toolbar-divider" />
-        <button className="toolbar-btn" onClick={handleExport} title="Layout als JSON exportieren">
-          💾 Export
-        </button>
-        <button className="toolbar-btn" onClick={handleImport} title="Layout aus JSON importieren">
-          📂 Import
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-        />
       </div>
       <div className="toolbar-right">
+        {mode === 'edit' && (
+          <>
+            <button
+              className={`toolbar-btn toolbar-btn-sm ${showHUD ? 'active' : ''}`}
+              onClick={onToggleHUD}
+              title="Performance-HUD (H)"
+            >
+              📊
+            </button>
+            <button
+              className="toolbar-btn toolbar-btn-sm"
+              onClick={onShowShortcuts}
+              title="Shortcuts anzeigen (?)"
+            >
+              ⌨
+            </button>
+          </>
+        )}
         <span className="toolbar-status">{assets.length} Assets</span>
       </div>
     </div>

@@ -30,3 +30,5 @@
 - Vitest config is in a separate `vitest.config.ts` (not inside `vite.config.ts`) due to Vite 8 type incompatibility.
 - Git commits should be on `main` branch directly (no feature branches per project convention).
 - Commit messages in German, format: `feat:`, `fix:`, `docs:`, `refactor:`, `perf:`, `style:`.
+- The Vite dev server requires no external services — just `npm run dev` to start developing.
+- Hot-reload works reliably; no need to restart the server after code changes.

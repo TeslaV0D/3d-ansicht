@@ -48,6 +48,10 @@ interface AppState {
   paste: () => void;
   deleteSelected: () => void;
   duplicateSelected: () => void;
+
+  // Alignment actions
+  alignSelected: (axis: 'x' | 'z', edge: 'min' | 'center' | 'max') => void;
+  distributeSelected: (axis: 'x' | 'z') => void;
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -198,6 +202,63 @@ export const useStore = create<AppState>((set, get) => ({
     set({
       assets: [...state.assets, ...newAssets],
       selectedIds: newAssets.map((a) => a.id),
+      past: [...state.past.slice(-MAX_HISTORY + 1), snapshot],
+      future: [],
+    });
+  },
+
+  alignSelected: (axis, edge) => {
+    const state = get();
+    const selected = state.assets.filter((a) => state.selectedIds.includes(a.id));
+    if (selected.length < 2) return;
+
+    const snapshot: AssetSnapshot = { assets: [...state.assets], selectedIds: [...state.selectedIds] };
+    const idx = axis === 'x' ? 0 : 2;
+    const values = selected.map((a) => a.position[idx]);
+
+    let target: number;
+    if (edge === 'min') target = Math.min(...values);
+    else if (edge === 'max') target = Math.max(...values);
+    else target = values.reduce((sum, v) => sum + v, 0) / values.length;
+
+    const updatedAssets = state.assets.map((a) => {
+      if (!state.selectedIds.includes(a.id)) return a;
+      const pos: [number, number, number] = [...a.position];
+      pos[idx] = target;
+      return { ...a, position: pos };
+    });
+
+    set({
+      assets: updatedAssets,
+      past: [...state.past.slice(-MAX_HISTORY + 1), snapshot],
+      future: [],
+    });
+  },
+
+  distributeSelected: (axis) => {
+    const state = get();
+    const selected = state.assets.filter((a) => state.selectedIds.includes(a.id));
+    if (selected.length < 3) return;
+
+    const snapshot: AssetSnapshot = { assets: [...state.assets], selectedIds: [...state.selectedIds] };
+    const idx = axis === 'x' ? 0 : 2;
+    const sorted = [...selected].sort((a, b) => a.position[idx] - b.position[idx]);
+    const min = sorted[0].position[idx];
+    const max = sorted[sorted.length - 1].position[idx];
+    const step = (max - min) / (sorted.length - 1);
+
+    const posMap = new Map<string, number>();
+    sorted.forEach((a, i) => posMap.set(a.id, min + i * step));
+
+    const updatedAssets = state.assets.map((a) => {
+      if (!posMap.has(a.id)) return a;
+      const pos: [number, number, number] = [...a.position];
+      pos[idx] = posMap.get(a.id)!;
+      return { ...a, position: pos };
+    });
+
+    set({
+      assets: updatedAssets,
       past: [...state.past.slice(-MAX_HISTORY + 1), snapshot],
       future: [],
     });
