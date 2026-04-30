@@ -1,4 +1,5 @@
 import { Canvas } from '@react-three/fiber';
+import type { ThreeEvent } from '@react-three/fiber';
 import { Grid } from '@react-three/drei';
 import { FactoryFloor } from './FactoryFloor';
 import { FactoryWalls } from './FactoryWalls';
@@ -15,9 +16,18 @@ export function SceneCanvas() {
   const setSelectedIds = useStore((s) => s.setSelectedIds);
   const tool = useStore((s) => s.tool);
 
-  function handleAssetPointerDown(id: string) {
-    if (tool !== 'select') return;
-    setSelectedIds([id]);
+  function handleAssetPointerDown(id: string, e: ThreeEvent<PointerEvent>) {
+    if (tool === 'place') return;
+    const ctrl = e.nativeEvent.ctrlKey || e.nativeEvent.metaKey;
+    if (ctrl) {
+      if (selectedIds.includes(id)) {
+        setSelectedIds(selectedIds.filter((sid) => sid !== id));
+      } else {
+        setSelectedIds([...selectedIds, id]);
+      }
+    } else {
+      setSelectedIds([id]);
+    }
   }
 
   function handleCanvasPointerMissed() {

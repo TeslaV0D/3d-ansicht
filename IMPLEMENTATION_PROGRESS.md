@@ -116,7 +116,46 @@
 
 ### Bekannte Einschränkungen / TODOs
 
-- [ ] Inspector-Panel enthält nur Platzhalter (Phase 3)
-- [ ] Kein Undo/Redo (Phase 3)
-- [ ] Keine Mehrfachauswahl (Phase 3)
-- [ ] Kein Transform-Gizmo (Phase 3)
+- [x] ~~Inspector-Panel enthält nur Platzhalter~~ → in Stand 4 implementiert
+- [x] ~~Kein Undo/Redo~~ → in Stand 4 implementiert
+- [x] ~~Keine Mehrfachauswahl~~ → in Stand 4 implementiert
+- [ ] Kein Transform-Gizmo (bewusst zurückgestellt — Position/Rotation/Skalierung via Inspector-Felder)
+- [ ] Keine Box-Selection (Phase 7)
+
+---
+
+## Stand 4: Phase 3 – Editing & Inspector
+
+### Abgeschlossen
+
+- **Phase 3.1 – Auswahl & Multi-Select:** Klick = Einzelauswahl, CTRL/CMD+Klick = additiv/subtraktiv zur bestehenden Auswahl. Klick auf leeren Bereich = Deselektieren. G/R/S Tasten wechseln Tool-Modus (Move/Rotate/Scale — wirkt über Inspector-Felder).
+- **Phase 3.2 – Inspector Panel:** Vollständige rechte Sidebar mit:
+  - Transform-Sektion (Position X/Y/Z, Rotation X/Y/Z, Skalierung W/H/T) mit Draft-State und Number.isFinite()-Validierung
+  - Material-Sektion (Farbe-Picker, Deckkraft/Roughness/Metalness Slider)
+  - Metadaten-Sektion (Name, Beschreibung, Zonentyp)
+  - Aktionen-Sektion (Sperren/Entsperren, Duplizieren, Löschen)
+  - Multi-Select zeigt Asset-Anzahl + Batch-Aktionen
+- **Phase 3.3 – Undo/Redo:** 80-Schritte History-Stack. Ctrl+Z = Undo, Ctrl+Y / Ctrl+Shift+Z = Redo. Snapshots enthalten assets[] + selectedIds[]. History wird bei Add/Delete/Paste/Duplicate automatisch gepusht.
+- **Phase 3.4 – Copy/Paste & Delete:** Ctrl+C = Kopieren, Ctrl+V = Einfügen (versetzt +1m/+1m), Ctrl+D = Duplizieren, Delete/Backspace = Löschen. Alle mit History-Integration.
+- **Phase 3.5 – Box-Selection:** Bewusst auf Phase 7 zurückgestellt. Ctrl+A (Alle auswählen) ist implementiert als Ersatz.
+
+### Geänderte Dateien
+
+- `src/store/useStore.ts` — Komplett überarbeitet: History-Stack (past/future), Clipboard, pushHistory/undo/redo/copySelected/paste/deleteSelected/duplicateSelected Actions
+- `src/hooks/useKeyboardShortcuts.ts` — Erweitert um Ctrl+Z/Y/C/V/D/A, Delete, G/R/S
+- `src/components/ui/InspectorPanel.tsx` — Vollständiges Inspector-Panel mit NumberInput (Draft-State), SliderInput, ColorPicker, Sections
+- `src/components/ui/WorkspaceLayout.tsx` — InspectorPanel integriert
+- `src/components/scene/SceneCanvas.tsx` — Multi-Select via CTRL+Klick, ThreeEvent-Import
+- `src/styles/app.css` — Inspector-Styles
+
+### Technische Entscheidungen
+
+- **Kein TransformControls-Gizmo:** Entscheidung gegen @react-three/drei TransformControls wegen Komplexität der Ref-Synchronisation mit Zustand-Store. Stattdessen exakte numerische Eingabe über Inspector-Felder — professioneller und präziser für Fabrikplanung.
+- **Draft-State für NumberInput:** Eingabefeld zeigt während Fokus den lokalen Draft-Wert, committed erst bei Blur/Enter. Verhindert NaN-Commits bei unvollständiger Eingabe.
+- **History bei jeder mutativen Aktion:** addAsset, deleteSelected, paste, duplicateSelected pushen automatisch einen Snapshot — kein manuelles pushHistory nötig in UI-Code.
+
+### Bekannte Einschränkungen / TODOs
+
+- [ ] Box-Selection (Phase 7)
+- [ ] Auto-Save (Phase 5)
+- [ ] Persistenz (Phase 5)

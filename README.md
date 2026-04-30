@@ -22,6 +22,10 @@ npm run dev
 - **Click-to-Place** mit Ghost-Vorschau und Grid-Snap
 - Live-Suchfilter in der Bibliothek
 - Hover-Feedback und Selection-Highlight auf platzierten Assets
+- **Inspector Panel** mit Transform, Material, Metadaten und Aktionen
+- **Undo/Redo** (80 Schritte) mit Ctrl+Z / Ctrl+Y
+- **Copy/Paste/Delete** mit Ctrl+C/V/D und Delete-Taste
+- **Multi-Select** mit Ctrl+Klick, Ctrl+A für alle
 - Dunkles UI-Design mit Toolbar, Bibliothek-Panel und Inspector-Panel
 - Edit-Modus und Präsentationsmodus (Panels ausgeblendet)
 - Grid-Overlay auf dem Hallenboden
@@ -38,6 +42,16 @@ npm run dev
 | Kamera Front | Taste 3 |
 | Kamera Seite | Taste 4 |
 | Platzierung abbrechen | Escape |
+| Undo | Ctrl/Cmd + Z |
+| Redo | Ctrl/Cmd + Y |
+| Kopieren | Ctrl/Cmd + C |
+| Einfügen | Ctrl/Cmd + V |
+| Duplizieren | Ctrl/Cmd + D |
+| Alle auswählen | Ctrl/Cmd + A |
+| Löschen | Delete / Backspace |
+| Bewegen-Modus | G |
+| Rotieren-Modus | R |
+| Skalieren-Modus | S |
 
 ## Tech Stack
 

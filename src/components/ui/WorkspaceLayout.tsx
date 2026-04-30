@@ -1,5 +1,6 @@
 import { SceneCanvas } from '../scene/SceneCanvas';
 import { LibraryPanel } from './LibraryPanel';
+import { InspectorPanel } from './InspectorPanel';
 import { useStore } from '../../store/useStore';
 
 export function WorkspaceLayout() {
@@ -13,14 +14,7 @@ export function WorkspaceLayout() {
         <SceneCanvas />
       </main>
 
-      {mode === 'edit' && (
-        <aside className="panel-right">
-          <div className="panel-header">Inspector</div>
-          <div className="panel-content">
-            <p className="panel-placeholder">Properties (Phase 3)</p>
-          </div>
-        </aside>
-      )}
+      {mode === 'edit' && <InspectorPanel />}
     </div>
   );
 }
