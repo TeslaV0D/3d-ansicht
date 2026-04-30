@@ -13,8 +13,11 @@ npm run dev
 
 ## Features
 
-- 3D-Fabrikhalle mit konfigurierbaren Wänden und Boden
+- 3D-Fabrikhalle mit konfigurierbaren Wänden (Beton/Metall/Glas) und Beton-Boden
+- Dachrahmen als Linien-Geometrie mit Querbalken
 - Isometrische Kamera mit OrbitControls (Drehen, Zoomen, Schwenken)
+- 4 Kamera-Presets mit animierten Übergängen
+- HDRI-Beleuchtung (Warehouse) mit Schatten
 - Dunkles UI-Design mit Toolbar, Bibliothek-Panel und Inspector-Panel
 - Edit-Modus und Präsentationsmodus
 - Grid-Overlay auf dem Hallenboden
@@ -26,6 +29,10 @@ npm run dev
 | Kamera drehen | Linke Maustaste + Ziehen |
 | Kamera zoomen | Mausrad |
 | Kamera schwenken | Rechte Maustaste + Ziehen |
+| Kamera Isometrisch | Taste 1 |
+| Kamera Top-Down | Taste 2 |
+| Kamera Front | Taste 3 |
+| Kamera Seite | Taste 4 |
 
 ## Tech Stack
 

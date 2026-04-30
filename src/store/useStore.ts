@@ -36,7 +36,7 @@ export const useStore = create<AppState>((set) => ({
     depth: 40,
     height: 8,
     showWalls: true,
-    showRoof: false,
+    showRoof: true,
     floorMaterial: 'concrete',
     wallMaterial: 'concrete',
   },

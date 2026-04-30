@@ -1,8 +1,9 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Grid } from '@react-three/drei';
+import { Grid } from '@react-three/drei';
 import { FactoryFloor } from './FactoryFloor';
 import { FactoryWalls } from './FactoryWalls';
 import { Lighting } from './Lighting';
+import { CameraRig } from './CameraRig';
 import { useStore } from '../../store/useStore';
 
 export function SceneCanvas() {
@@ -37,14 +38,7 @@ export function SceneCanvas() {
         />
       )}
 
-      <OrbitControls
-        makeDefault
-        dampingFactor={0.08}
-        enableDamping
-        target={[0, 0, 0]}
-        minDistance={5}
-        maxDistance={150}
-      />
+      <CameraRig />
     </Canvas>
   );
 }

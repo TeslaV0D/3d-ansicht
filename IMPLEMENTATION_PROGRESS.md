@@ -48,4 +48,36 @@
 - [ ] Bibliothek-Panel enthält nur Platzhalter (Phase 2)
 - [ ] Inspector-Panel enthält nur Platzhalter (Phase 3)
 - [ ] Keine Asset-Platzierung möglich (Phase 2)
-- [ ] Keine Kamera-Presets (Phase 1.1)
+- [x] ~~Keine Kamera-Presets~~ → in Stand 2 implementiert
+
+---
+
+## Stand 2: Phase 1 – 3D-Szene & Kamera
+
+### Abgeschlossen
+
+- **Phase 1.1 – Kamera-Presets:** Vier Kamera-Positionen (Isometrisch, Top, Front, Seite) mit animierten Übergängen (600ms Ease-Out). Tastenkürzel 1–4 implementiert. OrbitControls mit `dampingFactor: 0.08`, `maxPolarAngle` begrenzt sodass Kamera nicht unter den Boden geht.
+- **Phase 1.2 – Fabrikhalle:** Boden mit prozeduraler Beton-Textur (Canvas-basiert, 512×512, mit Rausch-Partikeln und feinen Rissen). Drei konfigurierbare Wände (Material: concrete/metal/glass). Dachrahmen als Linien-Geometrie mit Querbalken alle 10m. `showRoof` standardmäßig aktiviert.
+- **Phase 1.3 – Beleuchtung:** HDRI Environment (`warehouse` Preset aus @react-three/drei). directionalLight mit Schatten (1024² shadowMap, bias -0.0001). hemisphereLight für weiche Aufhellung. Realistische Beleuchtung ohne Überbelichtung.
+
+### Geänderte Dateien
+
+- `src/components/scene/CameraRig.tsx` — Neuer Kamera-Controller mit Presets und Keyboard-Shortcuts
+- `src/components/scene/SceneCanvas.tsx` — OrbitControls durch CameraRig ersetzt
+- `src/components/scene/FactoryFloor.tsx` — Prozedurale Beton-Textur, Material-Varianten (concrete/wood/tile/custom)
+- `src/components/scene/FactoryWalls.tsx` — Konfigurierbare Wandmaterialien, Dachrahmen-Komponente
+- `src/components/scene/Lighting.tsx` — HDRI Environment, verbesserte Schatten-Konfiguration
+- `src/store/useStore.ts` — `showRoof` default auf `true`
+
+### Technische Entscheidungen
+
+- **Prozedurale Textur statt Bilddatei:** Vermeidet externe Asset-Dateien, Textur wird einmalig beim Mount erzeugt (via `useMemo`)
+- **Animierte Kamera-Übergänge:** `requestAnimationFrame`-basierte Interpolation mit kubischer Ease-Out-Funktion statt instant-Jump für professionelles Gefühl
+- **Dachrahmen als BufferGeometry:** Alle Linien in einer einzigen Geometrie zusammengefasst für minimale Draw-Calls
+- **maxPolarAngle:** Kamera kann nicht unter den Boden gedreht werden (verhindert Desorientierung)
+
+### Bekannte Einschränkungen / TODOs
+
+- [ ] Bibliothek-Panel enthält nur Platzhalter (Phase 2)
+- [ ] Inspector-Panel enthält nur Platzhalter (Phase 3)
+- [ ] Keine Asset-Platzierung möglich (Phase 2)

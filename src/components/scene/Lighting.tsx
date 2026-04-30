@@ -1,3 +1,4 @@
+import { Environment } from '@react-three/drei';
 import { useStore } from '../../store/useStore';
 
 export function Lighting() {
@@ -19,8 +20,10 @@ export function Lighting() {
         shadow-camera-right={50}
         shadow-camera-top={50}
         shadow-camera-bottom={-50}
+        shadow-bias={-0.0001}
       />
-      <hemisphereLight args={['#b1e1ff', '#b97a20', 0.2]} />
+      <hemisphereLight args={['#b1e1ff', '#b97a20', 0.15]} />
+      <Environment preset="warehouse" background={false} />
     </>
   );
 }
